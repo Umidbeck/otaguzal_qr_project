@@ -1,0 +1,321 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>otaguzal</title>
+
+    <link href="{% static 'img/favicon.png' %}" rel="icon">
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin
+    ">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Amatic+SC:wght@400;700&display=swap"
+          rel="stylesheet">
+
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <style>
+        .lang-switch {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-switch .dropdown-toggle {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-switch .dropdown-toggle:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        .lang-switch .dropdown-menu {
+            min-width: 100px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        .lang-switch .dropdown-item {
+            padding: 8px 15px;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .lang-switch .dropdown-item:hover {
+            background: #007bff;
+            color: #fff;
+        }
+
+        /* Admin tugmalari uchun nafis va mobile qulay stil */
+        .admin-actions {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-item:hover .admin-actions {
+            opacity: 1;
+        }
+
+        .btn-custom-edit, .btn-custom-delete {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-width: 120px; /* Mobile uchun minimal kenglik */
+            justify-content: center;
+        }
+
+        .btn-custom-edit {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+            color: #fff;
+        }
+
+        .btn-custom-edit:active {
+            background: linear-gradient(45deg, #138496, #17a2b8);
+            transform: scale(0.98);
+        }
+
+        .btn-custom-delete {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: #fff;
+        }
+
+        .btn-custom-delete:active {
+            background: linear-gradient(45deg, #c82333, #dc3545);
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 768px) {
+            .admin-actions {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                transform: none;
+                opacity: 1;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .admin-actions .btn-custom-edit,
+            .admin-actions .btn-custom-delete {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .admin-actions .btn-custom-delete {
+                margin-bottom: 0;
+            }
+        }
+
+        /* Modal uchun nafis stil */
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header.bg-light {
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-footer {
+            border-top: none;
+        }
+
+        .btn-secondary, .btn-danger {
+            border-radius: 20px;
+            padding: 10px 25px;
+            font-weight: 500;
+        }
+
+        /* Yangi mahsulot tugmasi uchun stil */
+        .add-product-btn {
+            margin-left: 10px;
+            background: linear-gradient(45deg, #28a745, #218838);
+            color: #fff;
+            border-radius: 20px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .add-product-btn:hover {
+            background: linear-gradient(45deg, #218838, #28a745);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+        }
+
+        .add-product-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body class="index-page">
+
+<header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="/" class="logo d-flex align-items-center me-auto me-xl-0">
+            <h1 class="sitename">otaguzal</h1>
+            <span>.</span>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+            <ul>
+                <li><a href="#hero" class="active">Home<br></a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#chefs">Chefs</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li class="dropdown"><a href="#"><span>Dropdown</span> <i
+                        class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <ul>
+                        <li><a href="#">Dropdown 1</a></li>
+                        <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i
+                                class="bi bi-chevron-down toggle-dropdown"></i></a>
+                            <ul>
+                                <li><a href="#">Deep Dropdown 1</a></li>
+                                <li><a href="#">Deep Dropdown 2</a></li>
+                                <li><a href="#">Deep Dropdown 3</a></li>
+                                <li><a href="#">Deep Dropdown 4</a></li>
+                                <li><a href="#">Deep Dropdown 5</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Dropdown 2</a></li>
+                        <li><a href="#">Dropdown 3</a></li>
+                        <li><a href="#">Dropdown 4</a></li>
+                    </ul>
+                </li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="lang-switch">
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" id="languageDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ request.LANGUAGE_CODE|upper }}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="/?lang=uz">UZ</a></li>
+                            <li><a class="dropdown-item" href="/?lang=ru">RU</a></li>
+                            <li><a class="dropdown-item" href="/?lang=en">EN</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <div>
+            <a class="btn-getstarted" href="#book-a-table">{% trans 'Fikr bildiring' %}</a>
+            <br>
+            <br>
+            <br>
+            {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'add_product' %}" class="btn-getstarted">{% trans 'Yangi mahsulot yaratish' %}</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main class="main">
+    <section id="menu" class="menu section">
+        <div class="container">
+            <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
+                {% for category in categories %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if forloop.first %}active show{% endif %}" data-bs-toggle="tab"
+                           data-bs-target="#menu-{{ category.name_en|lower }}">
+                            <h4>
+                                {% if request.LANGUAGE_CODE == 'uz' %}{{ category.name_uz }}
+                                    {% elif request.LANGUAGE_CODE == 'ru' %}{{ category.name_ru }}
+                                    {% else %}{{ category.name_en }}
+                                {% endif %}
+                            </h4>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% block content %}
+
+            {% endblock %}
+
+        </div>
+    </section>
+
+    <section id="about" class="about section">
+        <!-- About content here (bo'sh qoldirildi) -->
+    </section>
+    <section id="events" class="events section">
+        <!-- Events content here (bo'sh qoldirildi) -->
+    </section>
+    <section id="chefs" class="chefs section">
+        <!-- Chefs content here (bo'sh qoldirildi) -->
+    </section>
+    <section id="gallery" class="gallery section">
+        <!-- Gallery content here (bo'sh qoldirildi) -->
+    </section>
+    <section id="contact" class="contact section">
+        <!-- Contact content here (bo'sh qoldirildi) -->
+    </section>
+</main>
+
+<footer id="footer" class="footer dark-background">
+    <div class="container copyright text-center mt-4">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename">Otaguzal </strong>
+            <span>{% trans 'All Rights Reserved' %}</span></p>
+        <div class="credits">
+            {% trans 'Designed & Developed by' %} <a href="https://otaguzal.uz">Edev.uz</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<!-- Preloader -->
+<div id="preloader"></div>
+
+<!-- Vendor JS Files -->
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
+<script src="{% static 'vendor/aos/aos.js' %}"></script>
+<script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
+<script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+<!-- Main JS File -->
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

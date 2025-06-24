@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static i18n %}
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">{% trans 'Mahsulotni tahrirlash' %}</h1>
+        <div class="card p-4 shadow-sm">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Name (EN)' %}</label>
+                    <input type="text" name="name_en" class="form-control" value="{{ product.name_en }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Name (UZ)' %}</label>
+                    <input type="text" name="name_uz" class="form-control" value="{{ product.name_uz }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Name (RU)' %}</label>
+                    <input type="text" name="name_ru" class="form-control" value="{{ product.name_ru }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Description (EN)' %}</label>
+                    <textarea name="description_en" class="form-control"
+                              required>{{ product.description_en }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Description (UZ)' %}</label>
+                    <textarea name="description_uz" class="form-control"
+                              required>{{ product.description_uz }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Description (RU)' %}</label>
+                    <textarea name="description_ru" class="form-control"
+                              required>{{ product.description_ru }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Price' %}</label>
+                    <input type="number" name="price" class="form-control" value="{{ product.price }}" step="0.01"
+                           required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Category' %}</label>
+                    <select name="category" class="form-control">
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}"
+                                    {% if cat.id == product.category.id %}selected{% endif %}>{{ cat.name_en }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{% trans 'Image' %}</label>
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name_en }}"
+                             style="max-width: 200px; margin-top: 10px;">
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">{% trans 'Saqlash' %}</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

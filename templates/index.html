@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load static i18n %}
+
+
+
+{% block content %}
+    <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+        {% for category in categories %}
+            <div class="tab-pane fade {% if forloop.first %}active show{% endif %}"
+                 id="menu-{{ category.name_en|lower }}">
+                <div class="tab-header text-center">
+                    <p>{% trans 'Menu' %}</p>
+                    <h3>
+                        {% if request.LANGUAGE_CODE == 'uz' %}{{ category.name_uz }}
+                            {% elif request.LANGUAGE_CODE == 'ru' %}{{ category.name_ru }}
+                            {% else %}{{ category.name_en }}
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="row gy-5">
+                    {% for product in products %}
+                        {% if product.category == category %}
+                            <div class="col-lg-4 menu-item position-relative">
+                                <a href="{{ product.image.url }}" class="glightbox"><img src="{{ product.image.url }}"
+                                                                                         class="menu-img img-fluid"
+                                                                                         alt="{{ product.name_en }}"
+                                                                                         style="width: 356px; height: 236px; object-fit: cover;"></a>
+                                <h4>
+                                    {% if request.LANGUAGE_CODE == 'uz' %}{{ product.name_uz }}
+                                        {% elif request.LANGUAGE_CODE == 'ru' %}{{ product.name_ru }}
+                                        {% else %}{{ product.name_en }}
+                                    {% endif %}
+                                </h4>
+                                <p class="ingredients">
+                                    {% if request.LANGUAGE_CODE == 'uz' %}{{ product.description_uz }}
+                                        {% elif request.LANGUAGE_CODE == 'ru' %}{{ product.description_ru }}
+                                        {% else %}{{ product.description_en }}
+                                    {% endif %}
+                                </p>
+                                {% if product.discount_percentage %}
+                                    <p class="price"><s>${{ product.price }}</s> <span
+                                            style="color: red;">${{ product.discount_price|floatformat:2 }}</span></p>
+                                {% else %}
+                                    <p class="price">${{ product.price }}</p>
+                                {% endif %}
+                                {% if user.is_authenticated and user.is_staff %}
+                                    <div class="admin-actions d-flex flex-wrap justify-content-center gap-3 mt-3">
+                                        <a href="{% url 'edit_product' product.id %}" class="btn btn-custom-edit">
+                                            <i class="bi bi-pencil-fill"></i> {% trans 'Tahrirlash' %}
+                                        </a>
+                                        <button class="btn btn-custom-delete" data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal{{ product.id }}">
+                                            <i class="bi bi-trash-fill"></i> {% trans 'O‘chirish' %}
+                                        </button>
+                                    </div>
+
+                                    <!-- O'chirish uchun modal -->
+                                    <div class="modal fade" id="deleteModal{{ product.id }}" tabindex="-1"
+                                         aria-labelledby="deleteModalLabel{{ product.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow-lg">
+                                                <div class="modal-header bg-light">
+                                                    <h5 class="modal-title"
+                                                        id="deleteModalLabel{{ product.id }}">{% trans 'Tasdiqlash' %}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-center">
+                                                    {% trans 'Siz haqiqatan ham' %}
+                                                    <strong>{{ product.name_en }}</strong> {% trans 'mahsulotini o‘chirishni xohlaysizmi?' %}
+                                                </div>
+                                                <div class="modal-footer justify-content-center">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">{% trans 'Yo‘q' %}</button>
+                                                    <a href="{% url 'delete_product' product.id %}"
+                                                       class="btn btn-danger">{% trans 'Ha, o‘chirish' %}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

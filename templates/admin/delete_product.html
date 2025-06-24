@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static i18n %}
+
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{% trans 'Mahsulotni o‘chirish' %}</h1>
+    <div class="card p-4 shadow-sm">
+        <p class="text-center">{% trans 'Siz haqiqatan ham' %} {{ product.name_en }} {% trans 'mahsulotini o‘chirishni xohlaysizmi?' %}</p>
+        <form method="post" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger w-25">{% trans 'Ha, o‘chirish' %}</button>
+            <a href="{% url 'home' %}" class="btn btn-secondary w-25">{% trans 'Yo‘q, qaytish' %}</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
